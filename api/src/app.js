@@ -10,8 +10,10 @@ const server = express();
 
 server.name = 'API';
 
-server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-server.use(bodyParser.json({ limit: '50mb' }));
+server.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); //ej StandUP esto comentado
+server.use(bodyParser.json({ limit: '50mb' }));  //ej StandUP esto comentado
+//server.use(express.urlencoded({extended:false})) esto está descomentado en ej standUp y L13y 14 comentadas
+server.use(express.json());
 server.use(cookieParser());
 server.use(morgan('dev'));
 server.use((req, res, next) => {

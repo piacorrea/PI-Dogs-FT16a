@@ -1,23 +1,22 @@
 const express = require ('express')
 require('dotenv').config();
-/* const { GAMES_APIKEY, API_KEY } = process.env; */
+const { URL_APIKEY } = process.env;
 const { Breed, Temperament } = require('../db');
 const axios = require('axios');
-const { response } = require('express');
-const router = require('express').Router();
 
 //FUNCIONES CONTROLADORAS
 
 const getApiInfo = async () => {
     try {
-      let apiInfo = (await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=948c432e-503d-4736-8694-a257a7b25bc8`)).data.map(el => {
+      let apiInfo = (await axios.get(`${URL_APIKEY}`)).data.map(el => {
         return {
             id: el.id,
             name: el.name,
-            image: el.image,
-            height: el.height,
-            weight: el.weight,
+            image: el.image.url,
+            height: el.height.metric,
+            weight: el.weight.metric,
             life_span: el.life_span,
+            temperament: [el.temperament].join().split(',').map( el => el.trim()),
         };
       });
       return apiInfo
@@ -32,8 +31,8 @@ const getDbInfo = async() => {
     return await Breed.findAll({
         include: {
             model: Temperament,             //Si quiero crear una raza y no incluyo este modelo nunca me va a traer los temperamentos.
-            attributes: ['name'],     //q me traiga los atributos del modelo temperament, pero no es necesario incluir el id.
-            through: {                //Con esto no me trae los otros datos q no quiero.
+            attributes: ['name'],           //q me traiga los atributos del modelo temperament, pero no es necesario incluir el id.
+             through: {                     //Con esto no me trae los otros datos q no quiero.
                 attributes: [],
             },
         }
@@ -54,28 +53,9 @@ const getAllBreeds = async () => {
  }
 }
 
-/* const getNameBreed = async () => {
-  try {
-    let {name} = req.query
-    if(name) {
-    let apiName = (await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${name}&&api_key=948c432e-503d-4736-8694-a257a7b25bc8`)).data.map(el => {
-        return {
-            id: el.id,
-            name: el.name,
-            image: el.image,
-            height: el.height,
-            weight: el.weight,
-            life_span: el.life_span,
-        };
-      });
-      return apiName
-    } 
-  } catch (error) {
-    console.log(error)
-  }
-} */
 
-module.exports = getAllBreeds/* , getNameBreed */
+
+module.exports = getAllBreeds;
 
 
 /* const getApiInfo = () => {
@@ -97,3 +77,24 @@ module.exports = getAllBreeds/* , getNameBreed */
      return arrayVideogames = apiP1.concat(apiP2, apiP3, apiP4, apiP5)
   }) .catch(error => next(error))
   } */
+
+  /* const getNameBreed = async () => {
+  try {
+    let {name} = req.query
+    if(name) {
+    let apiName = (await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${name}&&api_key=948c432e-503d-4736-8694-a257a7b25bc8`)).data.map(el => {
+        return {
+            id: el.id,
+            name: el.name,
+            image: el.image,
+            height: el.height,
+            weight: el.weight,
+            life_span: el.life_span,
+        };
+      });
+      return apiName
+    } 
+  } catch (error) {
+    console.log(error)
+  }
+} */

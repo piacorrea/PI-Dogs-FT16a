@@ -1,9 +1,7 @@
 const express = require ('express')
 require('dotenv').config();
-const { GAMES_APIKEY, API_KEY } = process.env;
 const { Breed, Temperament } = require('../db');
 const getAllBreeds = require('./Controllers')
-const axios = require('axios');
 const { response } = require('express');
 const router = require('express').Router();
 
@@ -22,52 +20,45 @@ router.get('/breeds', async (req, res) => {
        console.log(error);
      }
    }) 
-   
-   //GET/breed/{idBreed}
-   /* router.get('/videogames/:id', async (req, res) => {
-    const {id} = req.params
-     try {
-      if (id.includes('-')) {
-       const gamesDb = await getDbInfo();
-       let gameIdDb = await gamesDb.filter(el => el.id == id);
-       gameIdDb.length ? res.status(200).send(gameIdDb) : res.status (404).send('No se encontró la raza requerida')
-      } else {
-       const gamesApiTotal = await getApiInfo()
-       let gameIdApi = await gamesApiTotal.filter(el => el.id == id);
-       const apiGameUrlDescription = await axios.get(`https://api.rawg.io/api/games/${id}${API_KEY}`)
-       const apiGameDescription = await apiGameUrlDescription.data
-       gameIdApi[0]['description'] = apiGameDescription.description_raw
-       gameIdApi.length ? res.status(200).send(gameIdApi) : res.status (404).send('No se encontró el videogame requerido')
-      }
-     } catch (error) {
-       console.log(error);
-     }
-    })
-   
-   //POST/videogames
-   router.post('/videogame', async (req, res) => {
-      console.log ('Body en back', req.body)
-       let { name, background_image, description, releaseDate, rating, platforms, genre, createdInDb} = req.body;
-       try {
-           let gameCreated = await Videogame.create({   //Para crear el juego uso el modelo Videogame + create pq quedará en base de datos, no le paso género pq está en una relación aparte en la DB
-                   name,
-                   background_image,
-                   description,
-                   releaseDate,
-                   rating,
-                   platforms,
-                   createdInDb
-           })
-            let genresDb = await Genre.findAll({
-               where: {name:genre}  //Debe ser igual al genre que le paso por body
-           })
-           gameCreated.addGenre(genresDb)  //q al gameCreated le agregue el genero q está en la base de datos q coincidió con lo q viene del body. AddGenre pq el modelo se llama Genre
-           res.status(200).send('Videogame creado con éxito')
-       } catch (err) {
-           console.log(err);
-       } 
-   }) */
-   
+
+//GET/breeds/{idBreed}
+router.get('/breeds/:id', async (req, res) => {
+ const {id} = req.params;
+try {
+  const breedsTotal = await getAllBreeds();
+  if (id){
+    let breedId = await breedsTotal.filter(el => el.id == id);
+    breedId.length ? res.status(200).json( breedId) : res.status(404).send( 'Raza no encontrada' )            
+  }
+} catch (error) {
+  console.log(err);
+}
+})
+
+//POST/breed
+router.post('/breed', async (req, res) => {
+  console.log ('Body en back', req.body)
+  let { name, image, height, weight, life_span, temperament, createdInDb} = req.body;
+    try {
+      if( !name || !height || !weight ) return res.status( 404 ).send( 'Nombre, altura y peso son requeridos' )
+        let breedCreated = await Breed.create({   //Para crear el juego uso el modelo Breed + create pq quedará en base de datos, no le paso temperamento pq está en una relación aparte en la DB
+          name,
+          image,
+          height,
+          weight,
+          life_span,
+          createdInDb
+        })
+         let temperamentsDb = await Temperament.findAll({
+            where: {name:temperament}  //Debe ser igual al temperament que le paso por body
+        })
+        breedCreated.addTemperament(temperamentsDb)  //q al gameCreated le agregue el genero q está en la base de datos q coincidió con lo q viene del body. AddGenre pq el modelo se llama Genre
+        res.status(200).send('Raza creada con éxito')
+    } catch (err) {
+        console.log(err);
+    } 
+})
+  
    
    module.exports = router;
    
@@ -95,31 +86,43 @@ router.get('/breeds', async (req, res) => {
       }
      } */
    
-     /* router.delete ('/videogame', async (req, res) => { 
-      let {name, background_image, description, releaseDate, rating, platforms, genre} = req.body;
-       await Videogame.destroy({   
+/* router.delete ('/breed', async (req, res) => { 
+ let {name, image, height, weight, life_span} = req.body;
+  await Breed.destroy({   
         where: {
-         name,
-         background_image,
-         description,
-         releaseDate,
-         rating,
-         platforms,
+          name,
+          image,
+          height,
+          weight,
+          life_span
         }
    })
-   res.status(200).send('Videogame eliminado con éxito')
-   }) */
+ res.status(200).send('Raza eliminada con éxito')
+}) */ 
    
-   /* router.put('/videogame/:id', async (req, res) => { 
-      const {id} = req.params
-      const {description} = req.body; 
-      await Videogame.findByPk(id)
-      let gameUpDate = await Videogame.update({description: description}, {
-         where: {
-         id: id
-        }
-      })
-      console.log(gameUpDate)
-        res.status(200).send('Videogame actualizado con éxito')
-     }) */
+/* router.put('/breed', (req, res, next) => {
+  let {id} = req.query
+   let { name, height} = req.body;
+   try {
+       let breedDb = Breed.findOne({   
+              where: {
+                id: id
+              }
+       })
+       Promise.all([breedDb])
+       .then(response  =>{
+        let [breedDb] = response
+          breedDb.update ({
+            name,
+            height
+          }) 
+        return res.status(200).send(breedDb)
+       })
+   } catch (err) {
+       next(err);
+   } 
+}) */
+
+
+
      

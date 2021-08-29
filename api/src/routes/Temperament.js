@@ -1,26 +1,37 @@
 require('dotenv').config();
-const { GENRES_APIKEY } = process.env;
+const { URL_APIKEY } = process.env;
 const { Temperament } = require('../db');  //Sin esto no funcionan findAll y resto de propiedades sequelize
 const axios = require('axios');
 const router = require('express').Router();
 
 
 router.get('/temperaments', async (req, res) => {
- try {
-  const temperamentsApi = await axios.get(`${GENRES_APIKEY}`);
-  const temperaments = temperamentsApi.data;
-   temperaments.forEach( el => {
-       Temperament.findOrCreate({   //Si está no lo hace nada y si no está lo crea
-        where: {name: el.name}
+  try {
+    let temperamentsApiInfo = (await axios.get(`${URL_APIKEY}`)).data.map(el => {
+      return {
+          temperament: [el.temperament].join().split(',').map( el => el.trim()),
+      };
+    })
+    let temperamentsEach = temperamentsApiInfo.map(el => el.temperament).map(el => {
+      for (let i = 0; i < el.length; i++) return el[i]})
+      console.log(temperamentsEach)
+
+    let rawTemperaments = [] //Temperamentos sin espacios vacíos, pero con temperamentosrepetidos
+    let noRepetedTemperaments = []
+    temperamentsEach.forEach( el => { if(el !== '') return rawTemperaments.push(el)})
+    rawTemperaments.forEach(el => {if(!noRepetedTemperaments.includes(el)) return noRepetedTemperaments.push(el)}) 
+
+    noRepetedTemperaments.forEach(el => {
+      Temperament.findOrCreate({   //Si está no lo hace nada y si no está lo crea
+       where: {name: el}
       })
-  })
-/*   const alltemperaments = await temperament.findAll(); //descomentar esto y reemplazarlo por L19 si quiero el force=false pq como ya lo tengo en la BD quiero que los encuentre no q los cree pq ya están creados
-  res.status(200).send(alltemperaments) */
-  res.status(200).json(temperaments)
- } catch (error) {
-   console.log(error)
- }
-})
+    }) 
+    const allTemperaments = await Temperament.findAll(); //descomentar esto y reemplazarlo por L28 si quiero el force=false pq como ya lo tengo en la BD quiero que los encuentre no q los cree pq ya están creados
+    res.status(200).send(allTemperaments)  
+  } catch (error) {
+    console.log(error)
+  }
+ })
 
 
 module.exports = router;

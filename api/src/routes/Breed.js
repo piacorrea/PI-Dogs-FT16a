@@ -37,7 +37,6 @@ try {
 
 //POST/breed
 router.post('/breed', async (req, res) => {
-  console.log ('Body en back', req.body)
   let { name, image, height, weight, life_span, temperament, createdInDb} = req.body;
     try {
       if( !name || !height || !weight ) return res.status( 404 ).send( 'Nombre, altura y peso son requeridos' )

@@ -14,7 +14,6 @@ router.get('/temperaments', async (req, res) => {
     })
     let temperamentsEach = temperamentsApiInfo.map(el => el.temperament).map(el => {
       for (let i = 0; i < el.length; i++) return el[i]})
-      console.log(temperamentsEach)
 
     let rawTemperaments = [] //Temperamentos sin espacios vacíos, pero con temperamentosrepetidos
     let noRepetedTemperaments = []
@@ -26,7 +25,7 @@ router.get('/temperaments', async (req, res) => {
        where: {name: el}
       })
     }) 
-    const allTemperaments = await Temperament.findAll(); //descomentar esto y reemplazarlo por L28 si quiero el force=false pq como ya lo tengo en la BD quiero que los encuentre no q los cree pq ya están creados
+    const allTemperaments = await Temperament.findAll(); 
     res.status(200).send(allTemperaments)  
   } catch (error) {
     console.log(error)

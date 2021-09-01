@@ -7,21 +7,13 @@ const router = require('express').Router();
 
 router.get('/temperaments', async (req, res) => {
   try {
-    let temperamentsApiInfo = (await axios.get(`${URL_APIKEY}`)).data.map(el => {
-      return {
-          temperament: [el.temperament].join().split(',').map( el => el.trim()),
-      };
-    })
-    let temperamentsEach = temperamentsApiInfo.map(el => el.temperament).map(el => {
-      for (let i = 0; i < el.length; i++) return el[i]})
+    let temperamentsApiInfo = (await axios.get(`${URL_APIKEY}`)).data.map(el => el.temperament).join().split(",") // una vez accediendo a los temperamentos, Join los une a todos, luego split los mete en un arreglo separandolos en strings separados por "coma" 
+    let temperamentsEach = temperamentsApiInfo.map((el) => el.trim()) //Trim elimina los especios en blanco en ambos extremos del string
+    let noEmptyTemperaments = [] //Temperamentos sin espacios vacíos, pero con temperamentosrepetidos
+    temperamentsEach.forEach( el => { if(el !== '') return noEmptyTemperaments.push(el)}) //esto elimina los temperamentos vacíos
 
-    let rawTemperaments = [] //Temperamentos sin espacios vacíos, pero con temperamentosrepetidos
-    let noRepetedTemperaments = []
-    temperamentsEach.forEach( el => { if(el !== '') return rawTemperaments.push(el)})
-    rawTemperaments.forEach(el => {if(!noRepetedTemperaments.includes(el)) return noRepetedTemperaments.push(el)}) 
-
-    noRepetedTemperaments.forEach(el => {
-      Temperament.findOrCreate({   //Si está no lo hace nada y si no está lo crea
+    await noEmptyTemperaments.forEach(el => {
+      Temperament.findOrCreate({   //Si está no lo hace nada y si no está lo crea esto me elimina 
        where: {name: el}
       })
     }) 
@@ -34,3 +26,8 @@ router.get('/temperaments', async (req, res) => {
 
 
 module.exports = router;
+
+/* Para eliminar repetidos sin métodos sequelize    
+
+let noRepetedTemperaments = [] 
+rawTemperaments.forEach(el => {if(!noRepetedTemperaments.includes(el)) return noRepetedTemperaments.push(el)}) */

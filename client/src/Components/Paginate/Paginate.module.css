@@ -1,0 +1,34 @@
+.Pagination {
+    flex-direction: row;
+    align-items: center;
+    padding-left: 10px;
+    position: relative;
+    top: 5px;
+    
+}
+
+.pagination {
+    display: -ms-flexbox;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+    justify-content: center;
+}
+
+.button {
+    width: 30px;
+    height: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+    color: #000;
+    background-color: rgb(248, 247, 252);
+    border: none;
+    border-radius: 45px;
+    cursor: pointer;
+    outline: none;
+    align-content: space-between;
+}

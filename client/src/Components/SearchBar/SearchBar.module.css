@@ -1,0 +1,59 @@
+.container {
+    background-color: grey;
+    width: 270px;
+    display: flex;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.Input{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    width: 200px;
+    height: 20px;
+    padding: 4px;
+    border-radius: 15px 0 0 15px ;
+    outline:none;
+    border:none;
+    background-color: whitesmoke;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.Button{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 4px;
+    background-color: #fff;
+    border-radius: 0px 15px 15px 0px;
+    border: none;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.Button:hover{
+    background-color: black;
+    color: white;
+}
+
+
+.buttonSearch{
+    height:27px;
+    width: 100px;
+    border: black;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    cursor: pointer;
+}
+
+.inputSearch{
+    height:25px;
+    width: 150px;
+    border: none;
+    padding-left: 15px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    outline: 0;
+}

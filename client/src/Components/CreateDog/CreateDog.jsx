@@ -9,26 +9,30 @@ import logo from '../../Components/dog.png'
 
 function validate (input) {   //input es mi estado local
  let errors = {};
-  if (!input.name || Number(input.name)) {
-   errors.name = 'El nombre de la raza es requerida';
+  if (!input.name || !/^[a-zA-Z áéíóúñ]*$/.test(input.name) || input.name.length > 30 || input.name.length < 3) {
+   errors.name = 'El nombre de la raza debe contener de 3 a 30 caracteres de los cuales deben ser sólo letras';
   } 
-  if (!input.heightMin || isNaN(input.heightMin) || input.heightMin < 50 || input.heightMin >1500) {
-    errors.heightMin ='La altura mínima de la raza es requerida'
+  if (!input.heightMin || !/^([0-9])*$/.test(input.heightMin) || input.heightMin < 10 || input.heightMin > 99  || input.heightMin > input.heightMax) {
+    errors.heightMin ='La altura mínima de la raza debe ser un número, el cual debe ser mínimo de 2 dígitos y no puede ser mayor a la altura máxima'
   }
 
-  if (!input.heightMax || isNaN(input.heightMax) || input.heightMax < 50 || input.heightMax >2000 ) {
-    errors.heightMax ='La altura máxima de la raza es requerida'
+  if (!input.heightMax || !/^([0-9])*$/.test(input.heightMax) || input.heightMin > input.heightMax || input.heightMax > 999 ) {
+    errors.heightMax ='La altura máxima de la raza debe ser un número, el cual debe contener máximo 3 dígitos y no puede ser menor a la altura mínima'
   }
-  if (!input.weightMin || isNaN(input.weightMin) || input.weightMin < 1 || input.weightMin > 100) {
-    errors.weightMin ='El peso mínimo de la raza es requerido'
-  }
-
-  if (!input.weightMax || isNaN(input.weightMax) || input.weightMax < 1 || input.weightMax > 150) {
-    errors.weightMax ='El peso máximo de la raza es requerido'
+  if (!input.weightMin || !/^([0-9])*$/.test(input.weightMin) || input.weightMin < 1 || input.weightMin > 99 || input.weightMin > input.weightMax) {
+    errors.weighttMin ='El peso mínimo de la raza debe ser un número entero, el cual debe ser máximo de 2 dígitos y no puede ser mayor al peso máximo'
   }
 
-  if (!input.life_span || isNaN(input.life_span) || input.life_span < 1 || input.life_span > 100 ) {
-    errors.life_span = 'Los años de vida deben fluctuar entre 0 y 100'; 
+  if (!input.weightMax || !/^([0-9])*$/.test(input.weightMax) || input.weightMin > input.weightMax || input.weightMax > 999 ) {
+    errors.weightMax ='El peso máximo de la raza debe ser un número, el cual debe ser máximo de 3 dígitos y no puede ser menor al peso mínimo'
+  }
+
+  if (!input.life_spanMin || !/^([0-9])*$/g.test(input.life_spanMin) || input.life_spanMin < 1 || input.life_spanMin > 99 || input.life_spanMin > input.life_spanMax ) {
+    errors.life_spanMin = 'Los años mínimos de vida deben ser un número entero, mayor a 1 y no pueden ser mayor a 2 dígitos o superior a los años máximos de vida'; 
+  }
+
+  if (!input.life_spanMax || !/^([0-9])*$/g.test(input.life_spanMax) || input.life_spanMax < 1 || input.life_spanMax > 99 || input.life_spanMin > input.life_spanMax) {
+    errors.life_spanMax = 'Los años máximos de vida deben ser un número entero, mayor a 1 y no pueden ser mayor a 2 dígitos o superior a los años mínimos de vida'; 
   }
 /*   if (!input.platforms.length) {
    errors.platforms ='Se requiere al menos 1 plataforma'
@@ -50,12 +54,13 @@ export default function CreateBreed(){
  const [input, setInput] = useState({  //para crear el Raza necesito el formulario renderizado en la pagina y lo debo guardar en un estado q en este caso es input, se guarda como un obj q tendrá la L34 a la L40
   name: '',
   image: '',
-  temperament: [], //Si coloco un string vacio no me da la posibilidad de colocar mas de 1 temperamento
-  life_span: '',
+  life_spanMin: '',
+  life_spanMax: '',
   heightMin: '',
   heightMax: '',
   weightMin: '',
   weightMax: '',
+  temperament: [], //Si coloco un string vacio no me da la posibilidad de colocar mas de 1 temperamento
  })
 
  function handleChange(e){  //Maneja los cambios de mi input
@@ -81,17 +86,26 @@ export default function CreateBreed(){
   let checkboxsErrors = []
   if (input.temperament.length < 1) checkboxsErrors.push('Se requiere al menos 1 género');
   if (Object.values(errors).length || checkboxsErrors.length) return alert(Object.values(errors).concat(checkboxsErrors).join('\n')); // así no considera a temperaments ni a platforms
-  dispatch(postBreed(input))
+  var sendDog = {
+    name: input.name,
+    image: input.image,
+    life_span: input.life_spanMin == input.life_spanMax ? input.life_spanMax : + input.life_spanMin+ " - "+input.life_spanMax,
+    height: input.heightMin == input.heightMax ? input.heightMax : + input.heightMin+ " - "+input.heightMax,
+    weight: input.weightMin == input.weightMax ? input.weightMin : + input.weightMin+ " - "+input.weightMax,
+    temperament: input.temperament   
+}
+  dispatch(postBreed(sendDog))
   alert('Raza Creada!')
   setInput({       //con esto seteo el input en cero, "vacío"
     name: '',
-    image: '',
-    temperament: [], 
-    life_span: '',
+    image: '', 
+    life_spanMin: '',
+    life_spanMax: '',
     heightMin: '',
     heightMax: '',
     weightMin: '',
     weightMax: '',   
+    temperament: [],
   })
   
    history.push('/home') //metodo del roter q me redirige a la ruta q le pida, en esta linea se coloca para q cuando termine de crear al personaje me lleve al home para poder ver si se creó el nuevo Raza
@@ -118,8 +132,12 @@ export default function CreateBreed(){
               <input className= {s.control} type='text' value={input.image} name='image' placeholder='Ingrese Imagen' onChange={(e)=>handleChange(e)}/>
           </div>
           <div>
-              <input className= {s.control} type='text' value={input.life_span} name='life_span' placeholder='Ingrese Años de vida' onChange={(e)=>handleChange(e)}/>
-              {errors.life_span && (<p>{errors.life_span}</p>)}
+              <input className= {s.control} type='text' value={input.life_spanMin} name='life_spanMin' placeholder='Ingrese los mínimos años de vida de la raza' onChange={(e)=>handleChange(e)}/>
+              {errors.life_spanMin && (<p>{errors.life_spanMin}</p>)}
+          </div>
+          <div>
+              <input className= {s.control} type='text' value={input.life_spanMax} name='life_spanMax' placeholder='Ingrese los máximos años de vida de la raza' onChange={(e)=>handleChange(e)}/>
+              {errors.life_spanMax && (<p>{errors.life_spanMax}</p>)}
           </div>
           <div>
               <input className= {s.control} type='text' value={input.heightMin} name='heightMin' placeholder='Ingrese Altura Mínima'onChange={(e)=>handleChange(e)}/>

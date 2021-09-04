@@ -5,7 +5,7 @@ import {postBreed, getTemperaments, unmountAllBreeds} from '../../Redux/Actions'
 import {NavLink, useHistory} from 'react-router-dom';
 import { Validate } from './Validate' 
 import s from './CreateDog.module.css';
-import logo from '../../Components/dog.png'
+import logo from './dog.png'
 
 export default function CreateBreed(){
  const dispatch = useDispatch() 

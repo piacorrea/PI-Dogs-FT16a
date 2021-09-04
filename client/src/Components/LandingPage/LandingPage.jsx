@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import s from './LandingPage.module.css';
-/* import logo from '../dog.png' */
 
 export default function LandingPage(){
 

@@ -55,8 +55,12 @@ function rootReducer (state= initialState, action){
   })
    return { ...state, breeds: sortedArr1}
   
+   case 'UNMOUNT_ALL_BREEDS': return {...state, detail: []}
+  
   default: return state;
  } 
 }
+
+
 
 export default rootReducer;

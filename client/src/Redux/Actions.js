@@ -88,3 +88,5 @@ export function getDetail (id){
      }
     }
 }
+
+export const unmountAllBreeds = () => ({type: 'UNMOUNT_ALL_BREEDS'})

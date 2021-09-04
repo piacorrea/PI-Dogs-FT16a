@@ -8,7 +8,7 @@ export default function Paginado ({breedsPerPage, allBreeds, paginado}) { //por 
     }
 
     return(   
-        <nav className={s.Pagination}>  
+       <nav className={s.Pagination}>  
          <ul className={s.pagination}>
           {pageNumbers?.map(number =>(   /* Si tengo paginas en el array pageNumber () mapealos y q devuelva cada numero del paginado */
              <li key={number}>
@@ -16,6 +16,6 @@ export default function Paginado ({breedsPerPage, allBreeds, paginado}) { //por 
              </li>
           ))}
          </ul>
-        </nav>
+       </nav>
     )
 }

@@ -12,6 +12,12 @@ import s from './Home.module.css';
 export default function Home() {
 
   const dispatch = useDispatch()  
+
+  useEffect (()=>{
+    dispatch(getBreeds());
+    dispatch(getTemperaments())  //este dispatch es lo mismo q hacer mapdispatchTo props
+  },[dispatch]) //lo q se incluye adentro del arreglo depende de lo q compone el componentDidMount(L12 y 13), o sea como en este caso depende del dispatch, se coloca dentro del
+
                          
   const allBreeds = useSelector((state) => state.breeds) //Es lo mismo q hacer mapStateToprops, con el useSelector se trae en esta const todo lo q está en el estado de breeds
   const temperaments = useSelector ((state) => state.temperaments)
@@ -54,57 +60,45 @@ export default function Home() {
    setCurrentPage(1);  //Cuando se haga el ordenamiento q setee la pag en la primera
    setOrden(`Ordenado ${e.target.value}`)  //Cuando seteo en esta página 1, se modifique este estado local, q arranca vacio, pero ahora está seteado ordenado de tal forma, solo para q haga la modificación en el renderizado. si comento esta linea no funciona.
  }
-
-  //traernos del estado los breeds cuando el componente se monta, me lo traigo al landing para q sea más rapida la carga y no en el home
-  useEffect (()=>{
-    dispatch(getBreeds());
-    dispatch(getTemperaments())
-     //este dispatch es lo mismo q hacer mapdispatchTo props
-  },[dispatch]) //lo q se incluye adentro del arreglo depende de lo q compone el componentDidMount(L12 y 13), o sea como en este caso depende del dispatch, se coloca dentro del
  
- //renderizamos:
  return (
  <div className= {s.backgroundC}>
-  <div className={s.background}>
-    <div className={s.ctnOrders}>
-     <NavLink className={s.createLink} to= '/breed'>Crear Raza</NavLink>
-     <SearchBar/>
-     <select className={s.filter} onChange={e => handleFilterTemperaments(e)}>
-     <option value=''>Temperamentos</option>
-     {temperaments.map((el) => (<option value={el.name}>{el.name} </option>))}
-     </select>
-     <select className={s.filter} onChange={e => handleFilterCreated(e)}>
-       <option value= 'All'>Origen</option> 
-       <option value= 'created'>Creados</option>
-       <option value= 'api'>Existentes</option>
-     </select>
-     <select className={s.filter} onChange={e => handleSort(e)}>
-       <option value= ''>Ordenar Nombres</option> 
-       <option value= 'asc'>A - Z</option> 
-       <option value= 'desc'>Z - A</option>
-     </select>
-     <select className={s.filter} onChange={e => handleFilterWeight(e)}>
-       <option value= ''>Ordenar Peso</option> 
-       <option value= 'high'>Descendente</option>
-       <option value= 'less'>Ascendente</option>
-     </select>
-     <button className={s.createLinkRecarga} onClick={e=> {handleClick(e)}}> Recargar Razas </button>
-    </div>
-     <Paginate   //traeme el paginado y pasale como breedsPerPage, breedsPerPage q es el estado q tengo arriba de games por pagina, como allBreeds, el estado de allBreeds.length pq necesito un valor numérico y como paginado la cont paginado
-     breedsPerPage = {breedsPerPage}
-     allBreeds = {allBreeds.length}
-     paginado ={paginado}
-     />
-     <div className={s.games}>
-       {currentBreeds.length? currentBreeds.map((c)=>{ 
-        return (
-          <NavLink className={s.link} to={"/home/" + c.id}>
-           <Card name={c.name} image={c.image || `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZMXjR6n46vMi6b0PxPYaQLh_xj2HY4AO--w&usqp=CAU`} weight= {c.weight} temperament={c.temperament} temperaments={c.temperaments} key={c.id}/> 
-          </NavLink>
-        )
-       }) : <Loading/>
-      }
+    <div className={s.background}>
+      <div className={s.ctnOrders}>
+       <NavLink className={s.createLink} to= '/breed'>Crear Raza</NavLink>
+       <SearchBar/>
+       <select className={s.filter} id= {0} onChange={e => handleFilterTemperaments(e)}>
+       <option value=''>Temperamentos</option>
+       {temperaments.map((el) => (<option key={el.id} value={el.name}>{el.name} </option>))}
+       </select>
+       <select className={s.filter} id= {1} onChange={e => handleFilterCreated(e)}>
+         <option value= 'All'>Origen</option> 
+         <option value= 'created'>Creados</option>
+         <option value= 'api'>Existentes</option>
+       </select>
+       <select className={s.filter} id= {2} onChange={e => handleSort(e)}>
+         <option value= ''>Ordenar Nombres</option> 
+         <option value= 'asc'>A - Z</option> 
+         <option value= 'desc'>Z - A</option>
+       </select>
+       <select className={s.filter} id= {3} onChange={e => handleFilterWeight(e)}>
+         <option value= ''>Ordenar Peso</option> 
+         <option value= 'high'>Descendente</option>
+         <option value= 'less'>Ascendente</option>
+       </select>
+       <button className={s.createLinkRecarga} onClick={e=> {handleClick(e)}}> Recargar Razas </button>
       </div>
+       <Paginate breedsPerPage = {breedsPerPage} allBreeds = {allBreeds.length} paginado = {paginado} key = {paginado.toString()} />
+       <div className={s.games}>
+         {currentBreeds.length? currentBreeds.map((c)=>{ 
+          return (
+            <NavLink className={s.link} to={"/home/" + c.id}>
+             <Card name={c.name} image={c.image || `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZMXjR6n46vMi6b0PxPYaQLh_xj2HY4AO--w&usqp=CAU`} weight= {c.weight} temperament={c.temperament} temperaments={c.temperaments} key={c.id}/> 
+            </NavLink>
+          )
+         }) : <Loading/>
+        }
+        </div>
   </div>
 </div>
  )

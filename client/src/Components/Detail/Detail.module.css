@@ -1,10 +1,65 @@
+.backBtn{
+    text-decoration: none;
+    width: 160px;
+    padding:8px;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    border-radius: 10px;
+    background-color:rgb(168, 165, 165);
+    color: black;
+    font-size:20px;
+    font-style:normal;
+    font-weight: bold;
+    border: solid 2px #FFF;
+    transition: 500ms;
+}
+
+.backBtn:hover, .backBtn:focus {
+    background: #d8d80c;
+    cursor: pointer;
+    box-shadow: inset -6.5px -6.5px 0px 0px #4c4c0a;
+  }
+  .backBtn:active {
+    background: #b3b308;
+    box-shadow: inset 4px 4px 0px 0px #4c4c0a;
+  }
+  .backBtn:before, .backBtn:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-sizing: content-box;
+  }
+  .backBtn:before {
+    top: -6px;
+    left: 0;
+    border-top: 6px black solid;
+    border-bottom: 6px black solid;
+  }
+  .backBtn:after {
+    left: -6px;
+    top: 0;
+    border-left: 6px black solid;
+    border-right: 6px black solid;
+  }
+
 .background {
     position: absolute;
     top:0%;
     width: 100%;
-    height: 1000px;
-    background: rgb(7, 7, 7);
+    height: 100%;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQrlibAv7_w-qBsKU7aI8h7NNpBLOz9fW63Q&usqp=CAU');
+    background-repeat: no-repeat;
  }
+
+ .backgroundC{
+  position: absolute;
+  top:0%;
+  width: 100%;
+  height: 100%;
+  background: black;
+}
 
 .card{
     width: 900px;
@@ -45,18 +100,3 @@
     text-align: justify;
 }
 
-.volverLink{
-    text-decoration: none;
-    width: 160px;
-    padding:8px;
-    position: absolute;
-    top: 20px;
-    right: 10px;
-    border-radius: 10px;
-    background-color: #000000;
-    color: #FFF;
-    font-size:13px;
-    font-style: normal;
-    border: solid 1px #FFF;
-    transition: 500ms;
-}

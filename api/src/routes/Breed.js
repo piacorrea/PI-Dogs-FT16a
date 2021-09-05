@@ -13,9 +13,10 @@ router.get('/breeds', async (req, res) => {
        let breedsTotal = await getAllBreeds();  
        if(name){
          let breedName = await breedsTotal.filter(el => el.name.toLowerCase().includes(name.toLowerCase())); //q se fije si el nombre incluye el name q me pasan por query
-         breedName.length ? res.status(200).send(breedName) : res.json({data: {error:'No se encontró la raza requerida'}}) 
+         if (breedName.length) return res.status(200).send(breedName)         //Si no coloco return en cada res.send o res.json me lanza un error de header por lo q el operador ternario no me sirve
+         return res.json({data: {error:'No se encontró la raza requerida'}}) 
        }
-       res.status(200).send(breedsTotal)   
+       return res.status(200).send(breedsTotal)   
      } catch (error) {
        console.log(error);
      }
@@ -57,38 +58,16 @@ router.post('/breed', async (req, res) => {
         console.log(err);
     } 
 })
-  
+ 
    
    module.exports = router;
    
    
    
-   
-   
-   /* const getApiInfo = async () => {
-      try {
-        let apiUrl = await axios.get(`${GAMES_APIKEY}`)
-        let arrayVideogame = await VideogameMap(apiUrl.data.results) //Quiero el array results de la api
-        let next = apiUrl.data.next //De la api quiero acceder al next   
-     
-           while(arrayVideogame.length < 100) {
-           const urlNext= await axios.get(next)
-           const charge = VideogameMap(urlNext.data.results)
-           arrayVideogame = [...arrayVideogame, ...charge]
-           next = urlNext.data.next
-           }
-           
-            return arrayVideogame
-            
-      } catch (error) {
-         console.log(error);
-      }
-     } */
-   
-/* router.delete ('/breed', async (req, res) => { 
- let {name, image, height, weight, life_span} = req.body;
+/* router.delete ('/breed', async (req, res) => {    
+ let {name, image, height, weight, life_span} = req.body;   //Basta con un sólo parámetro que coincida para poder eliminar todo el post
   await Breed.destroy({   
-        where: {
+        where: {                                            //Si coloco sólo un atributo en body, acá tb debe ir sólo uno y debe coincidir con el enviado por body
           name,
           image,
           height,
@@ -98,8 +77,24 @@ router.post('/breed', async (req, res) => {
    })
  res.status(200).send('Raza eliminada con éxito')
 }) */ 
+
+/* router.put('/breed/:id', async (req, res, next) => {
+  let {id} = req.params
+   let breed = req.body;
+   try {
+       let breedDb = await Breed.update(breed, {   
+              where: {
+                id: id
+              }
+       })
+        return res.status(200).json({cambiado: true})
+       
+   } catch (err) {
+       next(err);
+   } 
+}) */
    
-/* router.put('/breed', (req, res, next) => {
+/* router.put('/breed', (req, res, next) => { 
   let {id} = req.query
    let { name, height} = req.body;
    try {

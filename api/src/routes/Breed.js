@@ -1,7 +1,7 @@
 const express = require ('express')
 require('dotenv').config();
 const { Breed, Temperament } = require('../db');
-const getAllBreeds = require('./Controllers')
+const getAllBreeds = require('../Controllers/Breeds')
 const { response } = require('express');
 const router = require('express').Router();
 
@@ -29,7 +29,7 @@ try {
   const breedsTotal = await getAllBreeds();
   if (id){
     let breedId = await breedsTotal.filter(el => el.id == id);
-    breedId.length ? res.status(200).json( breedId) : res.status(404).send( 'Raza no encontrada' )            
+    breedId.length ? res.status(200).json( breedId) : res.json({data: {error:'No se encontró la raza requerida'}})             
   }
 } catch (error) {
   console.log(err);
@@ -41,7 +41,7 @@ router.post('/breed', async (req, res) => {
   let { name, image, height, weight, life_span, temperament, createdInDb} = req.body;
     try {
       if( !name || !height || !weight ) return res.status( 404 ).send( 'Nombre, altura y peso son requeridos' )
-        let breedCreated = await Breed.create({   //Para crear el juego uso el modelo Breed + create pq quedará en base de datos, no le paso temperamento pq está en una relación aparte en la DB
+        let breedCreated = await Breed.create({   //Para crear la raza uso el modelo Breed + create pq quedará en base de datos, no le paso temperamento pq está en una relación aparte en la DB
           name,
           image,
           height,
@@ -52,7 +52,7 @@ router.post('/breed', async (req, res) => {
          let temperamentsDb = await Temperament.findAll({
             where: {name:temperament}  //Debe ser igual al temperament que le paso por body
         })
-        breedCreated.addTemperament(temperamentsDb)  //q al gameCreated le agregue el genero q está en la base de datos q coincidió con lo q viene del body. AddGenre pq el modelo se llama Genre
+        breedCreated.addTemperament(temperamentsDb)  //q al breedCreated le agregue el temperamento q está en la base de datos q coincidió con lo q viene del body. AddGenre pq el modelo se llama Genre
         res.status(200).send('Raza creada con éxito')
     } catch (err) {
         console.log(err);

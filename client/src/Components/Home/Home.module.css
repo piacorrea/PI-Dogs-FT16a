@@ -74,6 +74,10 @@
     margin-top: 30px;
 }
 
+.link {
+    text-decoration: none;
+}
+
 .title {
     text-shadow: -1px 5px 0 #000,
     5px 5px 0 #000,

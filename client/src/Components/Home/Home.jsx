@@ -6,7 +6,7 @@ import {NavLink} from 'react-router-dom';
 import Card from '../Card/Card'
 import Paginate from '../Paginate/Paginate';
 import SearchBar from '../SearchBar/SearchBar';
-import Loading from '../Loading/Loading'
+/* import Loading from '../Loading/Loading' */
 import s from './Home.module.css';
 
 export default function Home() {
@@ -90,13 +90,13 @@ export default function Home() {
       </div>
        <Paginate breedsPerPage = {breedsPerPage} allBreeds = {allBreeds.length} paginado = {paginado} key = {paginado.toString()} />
        <div className={s.games}>
-         {currentBreeds.length? currentBreeds.map((c)=>{ 
+         {currentBreeds.length ? currentBreeds.map((c)=>{ 
           return (
             <NavLink className={s.link} to={"/home/" + c.id}>
-             <Card name={c.name} image={c.image || `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZMXjR6n46vMi6b0PxPYaQLh_xj2HY4AO--w&usqp=CAU`} weight= {c.weight} temperament={c.temperament} temperaments={c.temperaments} key={c.id}/> 
+             <Card name={c.name} image={c.image || `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZMXjR6n46vMi6b0PxPYaQLh_xj2HY4AO--w&usqp=CAU`} weight= {c.weight} origin= {c.origin} temperament={c.temperament} temperaments={c.temperaments} key={c.id}/> 
             </NavLink>
           )
-         }) : <Loading/>
+         }) : <p>No hay dogs para mostrar</p>
         }
         </div>
   </div>

@@ -1,8 +1,17 @@
 import React from 'react';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux'
+import {getBreeds, getTemperaments} from '../../Redux/Actions';
 import {NavLink} from 'react-router-dom';
 import s from './LandingPage.module.css';
 
 export default function LandingPage(){
+  const dispatch = useDispatch()
+
+  useEffect (()=>{  //colocar el useEffect acá hará q al entrar en home los estados ya estén llenos y así no demoran en cargarse las cards y no necesito el loading...
+    dispatch(getBreeds());
+    dispatch(getTemperaments())  
+  })
 
     return(
       <div className={s.backgroundC}>

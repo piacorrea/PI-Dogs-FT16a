@@ -11,8 +11,17 @@ export default function SearchBar(){
 function handleInputChange(e){  //para guardar en mi estado local lo q vaya apareciendo en el input 
  e.preventDefault()
  setName(e.target.value)      //el value del input debe tomar el value del state para lo cual seteo el name
+/*  dispatch (getNameBreeds(name)) Esto es para que busque el name a medida q voy tecleando*/ 
  console.log(name) 
 }
+
+/* function handleKeyDown(e){  
+  if(e.key === 'Enter') {
+    e.preventDefault()
+    dispatch (getNameBreeds(name))
+    setName ('')
+  }    
+} Con esto reemplazo el botón L37 por el enter, por lo q no necesito el boton y debo comentarlo al igual q debo comentar las lineas 26 a 31*/
 
 function handleSubmit(e){  
  e.preventDefault()
@@ -24,7 +33,7 @@ function handleSubmit(e){
 return (
  <header className={s.container}>  
  <div className= {s.searchBar}>
-     <input className={s.Input} type = 'text' placeholder = 'Buscar Raza...' value= {name} onChange = {(e) => handleInputChange(e)}/> {/* Si no pongo value funciona, pero no se limpia el placeholder */}
+     <input className={s.Input} type = 'text' placeholder = 'Buscar Raza...' value= {name} onChange = {(e) => handleInputChange(e)} /* onKeyDown = {handleKeyDown} *//> {/* Si no pongo value funciona, pero no se limpia el placeholder, onKeyDpwn se descomenta si quiero reemplazar el boton por el enter */}
      <button className={s.Button} type = 'submit' onClick = {(e) => handleSubmit(e)}>Buscar</button>
  </div>
  </header> 

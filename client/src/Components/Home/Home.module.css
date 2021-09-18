@@ -78,6 +78,23 @@
     text-decoration: none;
 }
 
+.message {
+    background-color: red;
+    width: 260px;
+    height: 300px;
+    border-radius: 25px;
+    border-color: black;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin: 6px;
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    color: black;
+    font-weight: bold;
+    transition: all 0.25s;
+ }
+
 .title {
     text-shadow: -1px 5px 0 #000,
     5px 5px 0 #000,
@@ -97,5 +114,7 @@
     top: 0px;
     position: relative;
 }
+
+
 
 
